@@ -15,10 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('title')->unique();
             $table->foreignId('category_id')->constrained('categories');
+            $table->foreignId('user_id')->constrained('users');
             $table->string('image_url');
             $table->text('description');
             $table->unsignedMediumInteger('likes')->default(0);
             $table->timestamp('published_at')->nullable();
+            $table->string('status')->default(\App\Enums\PostStatusEnum::Draft->value);
             $table->timestamps();
         });
     }

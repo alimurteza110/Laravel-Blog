@@ -7,6 +7,7 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Auth;
 
 
 class PostController extends Controller
@@ -39,7 +40,8 @@ class PostController extends Controller
             'published_at'=> 'nullable|sometimes|date',
 
         ]);
-        $post = Post::create($attribute);
+
+        $post = Auth::user()->posts()->create($attribute);
 
         return Response::json($post)->setStatusCode(201);
     }
@@ -47,14 +49,10 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Post $post, Request $request)
+    public function show(Post $post)
     {
-        $posts = Category::find(2)->posts()
-            ->where('likes', '>', 7)
-            ->orderBy('title')
-            ->first();
 
-        return Response::json($posts->load('category'))->setStatusCode(200);
+        return Response::json($post->load('category'))->setStatusCode(200);
     }
 
     /**
@@ -65,11 +63,10 @@ class PostController extends Controller
         $attribute = $request->validate([
             'title' => 'required|unique:posts|string|between:10,255',
             'description' => 'required|string|between:10, 155',
+            'category_id' => 'required|int',
             'image_url' => 'required|string|between:10, 255',
             'published_at'=> 'nullable|sometimes|date'
         ]);
-
-        $post->update($attribute);
 
         return Response::json($post)->setStatusCode(200);
     }

@@ -61,6 +61,7 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+//        $posts = Category::find($category)->posts()->delete();
         $category->delete();
 
         return Response::json($category)->setStatusCode(204);
