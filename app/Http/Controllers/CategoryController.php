@@ -39,7 +39,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        return Response::json($category)->setStatusCode(200);
+        return Response::json($category->load('posts'))->setStatusCode(200);
     }
 
     /**
